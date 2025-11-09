@@ -18,7 +18,7 @@ export const coinsApi = {
   ),
 
   getHistory: (id: number, page = 1, limit = 50) => apiCall(
-    () => apiClient.get(`/api/coins/${id}/history`, { params: { page, limit } }),
+    () => apiClient.get(`/api/coins/${id}/price-history`, { params: { page, limit } }),
     coinHistoryResponseSchema
   ),
 

@@ -20,18 +20,21 @@ export const coinDetailSchema = z.object({
 });
 
 export const priceHistoryItemSchema = z.object({
+  price_history_id: z.number(),
+  coin_id: z.number(),
   price: z.number(),
-  timestamp: z.string(),
-  price_change_percentage: z.number(),
+  created_at: z.string(),
+  name: z.string(),
+  symbol: z.string(),
 });
 
 export const coinHistoryResponseSchema = z.object({
-  history: z.array(priceHistoryItemSchema),
+  data: z.array(priceHistoryItemSchema),
   pagination: z.object({
     currentPage: z.number(),
     totalPages: z.number(),
     totalItems: z.number(),
-    itemsPerPage: z.number(),
+    hasMore: z.boolean(),
   }),
 });
 
