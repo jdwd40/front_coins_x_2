@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { useMarketHistory } from '../hooks/useMarketHistory';
 import { MarketChart } from '../components/MarketChart';
-import { TimeRangeSelector } from '../components/TimeRangeSelector';
+import { TimeRangeSelector } from '@/shared/components/TimeRangeSelector';
 import { MarketStatusPill } from '../components/MarketStatusPill';
 import { Skeleton } from '@/shared/components/Skeleton';
-import type { TimeRange } from '../schemas';
+import type { TimeRange } from '@/shared/types/chart';
 
 export default function Dashboard() {
   const [timeRange, setTimeRange] = useState<TimeRange>('30M');

@@ -1,18 +1,16 @@
 import { useParams } from 'react-router-dom';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { useCoin, useCoinHistory } from '../hooks/useCoins';
+import { useCoin } from '../hooks/useCoins';
 import { AdminPriceUpdate } from '../components/AdminPriceUpdate';
+import { CoinPriceChart } from '../components/CoinPriceChart';
 import { Currency } from '@/shared/components/Currency';
 import { PercentChange } from '@/shared/components/PercentChange';
 import { Skeleton } from '@/shared/components/Skeleton';
-import { formatCurrency, formatDate } from '@/shared/utils/formatters';
 
 export default function CoinDetail() {
   const { id } = useParams<{ id: string }>();
   const coinId = parseInt(id || '0', 10);
 
   const { data: coin, isLoading: coinLoading } = useCoin(coinId);
-  const { data: history, isLoading: historyLoading } = useCoinHistory(coinId, 1, 50);
 
   if (coinLoading) {
     return (
@@ -30,12 +28,6 @@ export default function CoinDetail() {
   if (!coin) {
     return <div className="container mx-auto py-8">Coin not found</div>;
   }
-
-  const chartData = history?.history.map((item) => ({
-    timestamp: new Date(item.timestamp).getTime(),
-    price: item.price,
-    label: formatDate(item.timestamp),
-  })) || [];
 
   return (
     <div className="container mx-auto py-8">
@@ -75,47 +67,10 @@ export default function CoinDetail() {
         </div>
       </div>
 
-      <div className="border rounded-lg p-6 mb-8">
-        <h2 className="text-2xl font-bold mb-4">Price History</h2>
-        {historyLoading ? (
-          <Skeleton className="h-[400px]" />
-        ) : chartData.length > 0 ? (
-          <ResponsiveContainer width="100%" height={400}>
-            <LineChart data={chartData}>
-              <CartesianGrid strokeDasharray="3 3" opacity={0.1} />
-              <XAxis
-                dataKey="timestamp"
-                tickFormatter={(value) => new Date(value).toLocaleDateString('en-GB')}
-                stroke="hsl(var(--muted-foreground))"
-              />
-              <YAxis
-                tickFormatter={(value) => formatCurrency(value)}
-                stroke="hsl(var(--muted-foreground))"
-              />
-              <Tooltip
-                content={({ active, payload }) => {
-                  if (!active || !payload?.[0]) return null;
-                  return (
-                    <div className="bg-popover border border-border p-3 rounded-lg shadow-lg">
-                      <p className="text-sm text-muted-foreground">{payload[0].payload.label}</p>
-                      <p className="text-lg font-bold">{formatCurrency(payload[0].value as number)}</p>
-                    </div>
-                  );
-                }}
-              />
-              <Line
-                type="monotone"
-                dataKey="price"
-                stroke="hsl(var(--primary))"
-                strokeWidth={2}
-                dot={false}
-              />
-            </LineChart>
-          </ResponsiveContainer>
-        ) : (
-          <p className="text-muted-foreground">No price history available</p>
-        )}
-      </div>
+      <CoinPriceChart
+        coinId={coin.coin_id}
+        coinName={coin.name}
+      />
 
       <div className="border rounded-lg p-6">
         <h2 className="text-xl font-bold mb-4">Details</h2>

@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { coinsApi } from '../api';
 import type { UpdatePriceInput } from '../schemas';
+import type { TimeRange } from '@/shared/types/chart';
 
 export const coinKeys = {
   all: ['coins'] as const,
@@ -10,6 +11,9 @@ export const coinKeys = {
   detail: (id: number) => [...coinKeys.details(), id] as const,
   history: (id: number, page: number, limit: number) =>
     [...coinKeys.detail(id), 'history', page, limit] as const,
+  // NEW: Time range aware history key
+  historyByRange: (id: number, timeRange: TimeRange) =>
+    [...coinKeys.detail(id), 'history', 'range', timeRange] as const,
 };
 
 export function useCoins() {
