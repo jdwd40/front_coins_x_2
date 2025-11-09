@@ -67,3 +67,28 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Enhanced focus styles for accessibility */
+.recharts-wrapper:focus-within {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .recharts-cartesian-grid line {
+    stroke-opacity: 0.5 !important;
+  }
+
+  .recharts-area-curve {
+    stroke-width: 3px !important;
+  }
+}
+
+/* Touch-friendly spacing for time range buttons */
+@media (max-width: 768px) {
+  .time-range-button {
+    min-width: 44px;
+    min-height: 44px;
+  }
+}
